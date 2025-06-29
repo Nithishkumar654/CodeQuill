@@ -1,0 +1,18 @@
+.Resizer {
+  background: #999;
+  opacity: 0.5;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  transition: all 0.2s ease;
+  opacity: 1;
+}
+
+.Resizer.vertical {
+  width: 6px;
+  margin: 0 -3px;
+  cursor: col-resize;
+}
