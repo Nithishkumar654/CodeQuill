@@ -1,18 +1,20 @@
+// App.js
 import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
-import "./App.css";
 import SplitPane from "react-split-pane";
-import { AiOutlineSnippets } from "react-icons/ai";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { AiOutlineSnippets } from "react-icons/ai";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
-import SnippetManager from "./components/SnippetManager.js";
-import Login from "./components/Login.js";
-import SignUp from "./components/SignUp.js";
-import Toast from "./components/Toast.js";
 import axios from "axios";
-import { useApp } from "./context/AppContext.js";
-import SnippetTable from "./components/SnippetTable.js";
+
+import "./App.css";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import Toast from "./components/Toast";
+import SnippetManager from "./components/SnippetManager";
+import SnippetTable from "./components/SnippetTable";
+import { useApp } from "./context/AppContext";
 
 function App() {
   const {
@@ -45,7 +47,10 @@ function App() {
   const [err, setErr] = useState(false);
   const [code, setCode] = useState("");
 
+  // Load code for the selected language
   useEffect(() => {
+    if (!selected?.language) return;
+
     runCodeRef.current = () => runCode(setErr);
 
     const savedCode = localStorage.getItem(selected.language);
@@ -57,10 +62,12 @@ function App() {
     getSnippets();
   }, [selected, input]);
 
+  // Load runtimes and saved input
   useEffect(() => {
     runCodeRef.current = () => runCode(setErr);
     getRuntimes();
-    const savedCode = localStorage.getItem("savedCode");
+
+    const savedCode = localStorage.getItem(selected.language);
     if (savedCode) codeRef.current = savedCode;
 
     const savedInput = localStorage.getItem("savedInput");
@@ -69,14 +76,18 @@ function App() {
     getSnippets();
   }, []);
 
+  // Persist code to localStorage when updated
   useEffect(() => {
+    if (!selected?.language) return;
+
     const timeout = setTimeout(() => {
-      localStorage.setItem(selected.language, codeRef.current);
+      localStorage.setItem(selected.language, code);
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [codeRef.current]);
+  }, [code]);
 
+  // Persist input to localStorage on change
   useEffect(() => {
     const interval = setInterval(() => {
       localStorage.setItem("savedInput", input);
@@ -85,15 +96,16 @@ function App() {
     return () => clearInterval(interval);
   }, [input]);
 
+  // Auth token verification
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:3500/user-api/pathjump", { token: token })
+      .post("http://localhost:3500/user-api/pathjump", { token })
       .then((res) => {
+        const email = localStorage.getItem("email");
         if (res.data.success !== true) {
-          localStorage.clear();
+          if (email) localStorage.clear();
         } else {
-          const email = localStorage.getItem("email");
           setEmail(email);
           getSnippets();
         }
@@ -104,26 +116,27 @@ function App() {
       });
   }, [localStorage.getItem("token")]);
 
+  // Re-initialize editor when snippets update
   useEffect(() => {
     if (editorRef.current && monacoRef.current) {
       handleEditorMount(editorRef.current, monacoRef.current);
     }
   }, [snippets]);
 
-  function openSnippets() {
+  const openSnippets = () => {
     if (!email) {
       setMessage("Please Login First");
       setType("error");
     } else {
       handleShow();
     }
-  }
+  };
 
-  function handleLogout() {
+  const handleLogout = () => {
     localStorage.clear();
     setEmail(null);
     window.location.reload();
-  }
+  };
 
   return (
     <div className="h-full w-full">
@@ -138,14 +151,14 @@ function App() {
         defaultSize={700}
         paneStyle={{ overflow: "auto" }}
       >
+        {/* Code Editor Panel */}
         <div className="h-full flex flex-col bg-gray-200">
           <div className="flex items-center p-2 gap-2">
             {email ? (
               <OverlayTrigger
-                key={"bottom"}
-                placement={"bottom"}
+                placement="bottom"
                 overlay={
-                  <Tooltip id={`tooltip-${"bottom"}`}>
+                  <Tooltip>
                     <p className="bg-white p-1 rounded text-xs">Logout</p>
                   </Tooltip>
                 }
@@ -154,16 +167,14 @@ function App() {
                   className="p-2 rounded bg-red-500"
                   onClick={handleLogout}
                 >
-                  {" "}
-                  <LuLogOut />{" "}
+                  <LuLogOut />
                 </button>
               </OverlayTrigger>
             ) : (
               <OverlayTrigger
-                key={"bottom"}
-                placement={"bottom"}
+                placement="bottom"
                 overlay={
-                  <Tooltip id={`tooltip-${"bottom"}`}>
+                  <Tooltip>
                     <p className="bg-white p-1 rounded text-xs">Login</p>
                   </Tooltip>
                 }
@@ -172,44 +183,38 @@ function App() {
                   className="p-2 rounded bg-green-500"
                   onClick={handleLoginShow}
                 >
-                  {" "}
-                  <LuLogIn />{" "}
+                  <LuLogIn />
                 </button>
               </OverlayTrigger>
             )}
 
             <Login title="Login" />
-
             <SignUp title="Sign Up" />
 
             <p className="text-sm">Language:</p>
             <select
               className="border p-1 rounded"
+              value={selected.language}
               onChange={(e) => {
-                const s = runtimes.find((p) => p.language == e.target.value);
-                if (s) {
-                  setSelected(s);
-                }
+                const lang = runtimes.find(
+                  (p) => p.language === e.target.value
+                );
+                if (lang) setSelected(lang);
               }}
             >
               {runtimes.map((p) => (
-                <option value={p.language}>
+                <option key={p.language} value={p.language}>
                   {p.language.toUpperCase()} {p.version}
                 </option>
               ))}
             </select>
 
-            {email ? (
-              <p className="m-auto">{email}</p>
-            ) : (
-              <p className="m-auto">Guest</p>
-            )}
+            <p className="m-auto">{email || "Guest"}</p>
 
             <OverlayTrigger
-              key={"bottom"}
-              placement={"bottom"}
+              placement="bottom"
               overlay={
-                <Tooltip id={`tooltip-${"bottom"}`}>
+                <Tooltip>
                   <p className="bg-white p-1 rounded text-xs">Snippets</p>
                 </Tooltip>
               }
@@ -223,18 +228,13 @@ function App() {
             </OverlayTrigger>
 
             <SnippetManager title="Snippets" />
-
             <SnippetTable title="Snippets" />
 
             <OverlayTrigger
-              key={"left"}
-              placement={"left"}
+              placement="left"
               overlay={
-                <Tooltip id={`tooltip-${"left"}`}>
-                  {" "}
-                  <p className="bg-white p-1 rounded text-xs zIndex-1">
-                    Ctrl + Enter
-                  </p>{" "}
+                <Tooltip>
+                  <p className="bg-white p-1 rounded text-xs">Ctrl + Enter</p>
                 </Tooltip>
               }
             >
@@ -247,28 +247,34 @@ function App() {
               </button>
             </OverlayTrigger>
           </div>
+
           <div className="flex-1">
             <Editor
               language={selected.language === "c++" ? "cpp" : selected.language}
-              defaultValue={codeRef.current}
-              onChange={(val) => {
-                codeRef.current = val;
-              }}
               value={code}
               theme="vs-dark"
+              onChange={(val) => {
+                if (val !== undefined) {
+                  codeRef.current = val;
+                  setCode(val);
+                }
+              }}
               onMount={(editor, monaco) => {
                 editorRef.current = editor;
                 monacoRef.current = monaco;
+                handleEditorMount(editor, monaco);
               }}
               options={{
                 fontFamily: "Monaco, Menlo, 'Courier New', monospace",
                 fontSize: 13,
-                tabSpace: 2,
+                tabSize: 2,
+                insertSpaces: true,
               }}
             />
           </div>
         </div>
 
+        {/* Input/Output Panel */}
         <div className="h-full flex flex-col">
           <p className="text-sm p-2">input.txt</p>
           <div className="flex-1">
@@ -279,9 +285,12 @@ function App() {
               options={{
                 fontFamily: "Monaco, Menlo, 'Courier New', monospace",
                 fontSize: 13,
+                tabSize: 2,
+                insertSpaces: true,
               }}
             />
           </div>
+
           <p className="text-sm p-2">output.txt</p>
           <div className="flex-1 border-t">
             <Editor

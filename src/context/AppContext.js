@@ -42,11 +42,6 @@ export const AppProvider = ({ children }) => {
   const codeRef = useRef("");
   const runCodeRef = useRef(() => {});
 
-  const showToast = (message, type = "info") => {
-    setToast({ message, type });
-    setTimeout(() => setToast({ message: "", type: "" }), 3000);
-  };
-
   async function getRuntimes() {
     const response = await axios.get("https://emkc.org/api/v2/piston/runtimes");
     const sorted = response.data.sort((a, b) =>
@@ -197,7 +192,6 @@ export const AppProvider = ({ children }) => {
         snippets,
         setSnippets,
         toast,
-        showToast,
         showLogin,
         setShowLogin,
         showSignUp,
