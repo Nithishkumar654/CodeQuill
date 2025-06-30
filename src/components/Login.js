@@ -18,7 +18,7 @@ function Login({ title }) {
     if (!email || !pass) return;
 
     axios
-      .post("http://localhost:3500/user-api/login", {
+      .post("https://codequill-m8ak.onrender.com/user-api/login", {
         email: email,
         password: pass,
       })

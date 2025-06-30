@@ -27,7 +27,7 @@ const SnippetTable = ({ title }) => {
   const onUpdate = async (index, edit) => {
     try {
       const response = await axios.put(
-        "http://localhost:3500/snippet-api/update-snippet",
+        "https://codequill-m8ak.onrender.com/snippet-api/update-snippet",
         {
           email: localStorage.getItem("email"),
           ...edit,
@@ -56,7 +56,7 @@ const SnippetTable = ({ title }) => {
   const handleDelete = async (index) => {
     try {
       const response = await axios.delete(
-        "http://localhost:3500/snippet-api/delete-snippet",
+        "https://codequill-m8ak.onrender.com/snippet-api/delete-snippet",
         {
           data: {
             email: localStorage.getItem("email"),

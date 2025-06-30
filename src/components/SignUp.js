@@ -4,7 +4,6 @@ import Toast from "./Toast";
 import { useApp } from "../context/AppContext";
 
 function SignUp({ title }) {
-  
   const { showSignUp, handleSignUpClose, setMessage, setType } = useApp();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -16,7 +15,7 @@ function SignUp({ title }) {
   function submitSignUp(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:3500/user-api/signup", {
+      .post("https://codequill-m8ak.onrender.com/user-api/signup", {
         email: email,
         password: pass,
         repeatPassword: repeatPass,

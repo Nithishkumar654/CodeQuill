@@ -100,7 +100,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:3500/user-api/pathjump", { token })
+      .post("https://codequill-m8ak.onrender.com/user-api/pathjump", { token })
       .then((res) => {
         const email = localStorage.getItem("email");
         if (res.data.success !== true) {

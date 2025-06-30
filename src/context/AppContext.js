@@ -58,7 +58,7 @@ export const AppProvider = ({ children }) => {
 
     try {
       const response = await axios.get(
-        "http://localhost:3500/snippet-api/get-snippets",
+        "https://codequill-m8ak.onrender.com/snippet-api/get-snippets",
         {
           params: {
             language: selected.language,
