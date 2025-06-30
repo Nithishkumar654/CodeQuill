@@ -76,7 +76,7 @@ export const AppProvider = ({ children }) => {
         setType("error");
       }
     } catch (err) {
-      setMessage(err.response.data.message || "Something went wrong..");
+      setMessage(err?.response?.data?.message || "Something went wrong..");
       setType("error");
     }
   }

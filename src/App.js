@@ -61,7 +61,7 @@ function App() {
     }
 
     getSnippets();
-  }, [selected, input]);
+  }, [selected]);
 
   // Load runtimes and saved input
   useEffect(() => {
@@ -90,6 +90,8 @@ function App() {
 
   // Persist input to localStorage on change
   useEffect(() => {
+    runCodeRef.current = () => runCode(setErr);
+
     const interval = setInterval(() => {
       localStorage.setItem("savedInput", input);
     }, 1000);
@@ -112,7 +114,7 @@ function App() {
         }
       })
       .catch((err) => {
-        setMessage("Error: " + err.response.data.message);
+        setMessage("Error: " + err?.response?.data?.message);
         setType("error");
       });
   }, [localStorage.getItem("token")]);
@@ -213,7 +215,7 @@ function App() {
               ))}
             </select>
 
-            <p className="m-auto">{email || "Guest"}</p>
+            <p className="m-auto max-w-[15ch] truncate">{email || "Guest"}</p>
 
             <OverlayTrigger
               placement="bottom"

@@ -43,7 +43,7 @@ const SnippetTable = ({ title }) => {
         setType("error");
       }
     } catch (err) {
-      setMessage(err.response.data.message);
+      setMessage(err?.response?.data?.message);
       setType("error");
     }
   };
@@ -75,7 +75,7 @@ const SnippetTable = ({ title }) => {
         setType("error");
       }
     } catch (err) {
-      setMessage(err.response.data.message);
+      setMessage(err?.response?.data?.message);
       setType("error");
     }
   };
