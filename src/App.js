@@ -7,6 +7,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 import { AiOutlineSnippets } from "react-icons/ai";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
 import axios from "axios";
+import image from "./assets/codequill.png";
 
 import "./App.css";
 import Login from "./components/Login";
@@ -154,6 +155,9 @@ function App() {
         {/* Code Editor Panel */}
         <div className="h-full flex flex-col bg-gray-200">
           <div className="flex items-center p-2 gap-2">
+            <div className="">
+              <img src={image} alt="logo" width={"50"} className="rounded-xl" />
+            </div>
             {email ? (
               <OverlayTrigger
                 placement="bottom"

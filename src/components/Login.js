@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Toast from "./Toast";
 import { useApp } from "../context/AppContext";
+import image from "../assets/codequill.png";
 
 function Login({ title }) {
   const { showLogin, handleLoginClose, handleSignUpShow, setMessage, setType } =
@@ -56,14 +57,21 @@ function Login({ title }) {
       ></div>
 
       <div className="bg-black text-white w-full max-w-md rounded-lg shadow-lg z-50 p-6 relative">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold m-auto">{title}</h2>
-          <button
-            className="text-gray-500 hover:text-gray-700 text-3xl cursor-pointer"
-            onClick={handleLoginClose}
-          >
-            &times;
-          </button>
+        <div className="flex items-center mb-4">
+          <div className="">
+            <img src={image} alt="logo" width={"90"} className="rounded-xl" />
+          </div>
+          <div className="m-auto">
+            <h2 className="text-xl font-semibold">{title}</h2>
+          </div>
+          <div className="">
+            <button
+              className="text-gray-500 hover:text-gray-700 text-3xl cursor-pointer"
+              onClick={handleLoginClose}
+            >
+              &times;
+            </button>
+          </div>
         </div>
 
         {/* {err.length !== 0 && <p className="text-sm text-red-500">*{err}</p>} */}

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Toast from "./Toast";
 import { useApp } from "../context/AppContext";
+import image from "../assets/codequill.png";
 
 function SignUp({ title }) {
   const { showSignUp, handleSignUpClose, setMessage, setType } = useApp();
@@ -47,6 +48,7 @@ function SignUp({ title }) {
 
       <div className="bg-black text-white w-full max-w-md rounded-lg shadow-lg z-50 p-6 relative">
         <div className="flex justify-between items-center mb-4">
+          <img src={image} alt="logo" width={"90"} className="rounded-xl" />
           <h2 className="text-xl font-semibold m-auto">{title}</h2>
           <button
             className="text-gray-500 hover:text-gray-700 text-3xl cursor-pointer"
