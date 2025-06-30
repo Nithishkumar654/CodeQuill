@@ -3,7 +3,7 @@ const dotenv = require("dotenv").config();
 const app = exp();
 const cors = require("cors");
 const path = require("path");
-// app.use(exp.static(path.join(__dirname, "./build")));
+app.use(exp.static(path.join(__dirname, "./build")));
 app.use(cors());
 const { MongoClient } = require("mongodb");
 
@@ -38,11 +38,6 @@ client
     console.log("DB Connection Success..");
   })
   .catch((err) => console.log("DB error" + err));
-
-// const pageRefresh = (req, res, next) => {
-//     res.sendFile(path.join(__dirname, "./build/index.html"));
-// };
-// app.use("*", pageRefresh);
 
 const invalidPathMiddleware = (req, res, next) => {
   res.send({ message: "Invalid Path" });
