@@ -26,6 +26,7 @@ const SnippetTable = ({ title }) => {
 
   const onUpdate = async (index, edit) => {
     try {
+      edit.language = snippets[index].language === "cpp" ? "c++" : snippets[index].language;
       const response = await axios.put(
         "https://codequill-m8ak.onrender.com/snippet-api/update-snippet",
         {
@@ -61,7 +62,7 @@ const SnippetTable = ({ title }) => {
           data: {
             email: localStorage.getItem("email"),
             prefix: snippets[index].prefix,
-            language: snippets[index].language,
+            language: (snippets[index].language === "cpp" ? "c++" : snippets[index].language),
           },
         }
       );
@@ -132,21 +133,7 @@ const SnippetTable = ({ title }) => {
                   </td>
 
                   <td className="px-4 py-2 border">
-                    {editingIndex === index ? (
-                      <input
-                        type="text"
-                        value={editedSnippet.language}
-                        onChange={(e) =>
-                          setEditedSnippet({
-                            ...editedSnippet,
-                            language: e.target.value,
-                          })
-                        }
-                        className="border p-1 rounded w-full"
-                      />
-                    ) : (
-                      snip.language
-                    )}
+                    {snip.language}
                   </td>
 
                   <td className="px-4 py-2 border">

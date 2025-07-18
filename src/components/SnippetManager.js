@@ -62,6 +62,10 @@ const SnippetManager = ({ title }) => {
       if (response.data.success == true) {
         setMessage(response.data.message);
         setType("success");
+        setPrefix("");
+        setSnippet("");
+        // getSnippets();
+        window.location.reload();
       } else {
         setMessage(response.data.message || "Something went wrong..");
         setType("error");

@@ -96,16 +96,16 @@ export const AppProvider = ({ children }) => {
           version: selected.version || "10.2.0",
           files: [{ content: latestCode }],
           stdin: input,
-          run_timeout: 1000,
+          run_timeout: 3000,
         }
       );
 
       const { stdout, stderr, signal } = response.data.run || {};
       const compileErr = response.data.compile?.stderr;
 
-      if (signal) setOutput("Time Limit Exceeded or other error occurred.!");
-      else if (stderr) setOutput(stderr);
+      if (stderr) setOutput(stderr);
       else if (compileErr) setOutput(compileErr);
+      else if (signal) setOutput(signal + " Time Limit Exceeded or other error occurred.!");
       else setOutput(stdout);
 
       if (stderr || compileErr || signal) setErr(true);
